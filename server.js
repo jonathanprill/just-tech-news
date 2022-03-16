@@ -13,7 +13,7 @@ app.use(routes);
 
 // turn on connection to db and server
 //.sync Sequelize taking the models and connecting them to associated database tables
-//TOGGLE { force: fasle to true } to reset tables!
+//TOGGLE { force: fasle to true } to reset tables! True will delete things
 sequelize.sync({ force: false }).then(() => {
   app.listen(PORT, () => console.log('Now listening'));
 });

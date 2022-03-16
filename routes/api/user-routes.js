@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { User } = require('../../models');
+const { User, Post, Vote } = require("../../models");
 
 // GET /api/users   ||   .findAll() = SELECT * FROM users;
 router.get('/', (req, res) => {
@@ -20,7 +20,19 @@ router.get('/:id', (req, res) => {
     attributes: { exclude: ['password'] },
     where: {
       id: req.params.id
-    }
+    },
+    include: [
+      {
+        model: Post,
+        attributes: ['id', 'title', 'post_url', 'created_at']
+      },
+      {
+        model: Post,
+        attributes: ['title'],
+        through: Vote,
+        as: 'voted_posts'
+      }
+    ]
   })
     .then(dbUserData => {
       if (!dbUserData) {
@@ -34,6 +46,7 @@ router.get('/:id', (req, res) => {
       res.status(500).json(err);
     });
 });
+
 
 // POST /api/users
 router.post('/', (req, res) => {
@@ -52,7 +65,7 @@ router.post('/', (req, res) => {
 
 //Login Route
 router.post('/login', (req, res) => {
-// expects {email: 'lernantino@gmail.com', password: 'password1234'}
+  // expects {email: 'lernantino@gmail.com', password: 'password1234'}
   User.findOne({
     where: {
       email: req.body.email
@@ -72,7 +85,7 @@ router.post('/login', (req, res) => {
       return;
     }
     res.json({ user: dbUserData, message: 'You are now logged in!' });
-  });  
+  });
 });
 
 // PUT /api/users/1
