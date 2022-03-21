@@ -1,0 +1,24 @@
+<ol class="post-list">
+    {{#each posts as |post|}}
+    <li>
+        <article class="post">
+            <div class="title">
+                <a href="{{post.post_url}}" target="_blank">{{post.title}}</a>
+                <span>({{post.post_url}})</span>
+            </div>
+            <div class="meta">
+                {{post.vote_count}} point(s) by {{post.user.username}} on
+                {{post.created_at}}
+                |
+                <a href="/post/{{post.id}}">{{post.comments.length}} comment(s)</a>
+            </div>
+        </article>
+    </li>
+    {{/each}}
+</ol>
+
+{{!------ NOTES ------}}
+
+{{!-- Your file/folder structure MUST be set up this way for Handlebars.js to work correctly.
+You will always have a main layout located at (and named) views/layouts/main.handlebars.
+All other template files will go directly in the views folder (views/welcome.handlebars). --}}
