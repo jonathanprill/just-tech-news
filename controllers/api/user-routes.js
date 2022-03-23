@@ -1,5 +1,7 @@
 const router = require('express').Router();
+const withAuth = require('../../utils/auth');
 const { User, Post, Vote, Comment } = require("../../models");
+
 
 // GET /api/users   ||   .findAll() = SELECT * FROM users;
 router.get('/', (req, res) => {
