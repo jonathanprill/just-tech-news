@@ -1,7 +1,10 @@
 //NEW
 const router = require('express').Router();
-const { Post, User, Vote, Comment } = require('../../models');
+const withAuth = require('../../utils/auth');
 const sequelize = require('../../config/connection');
+const { Post, User, Vote, Comment } = require('../../models');
+
+
 
 // Get all posts in the database
 // get all users
@@ -81,12 +84,13 @@ router.get('/:id', (req, res) => {
 });
 
 //Create a post
-router.post('/', (req, res) => {
+router.post('/', withAuth, (req, res) => {
     // expects {title: 'Taskmaster goes public!', post_url: 'https://taskmaster.com/press', user_id: 1}
     Post.create({
         title: req.body.title,
         post_url: req.body.post_url,
-        user_id: req.body.user_id
+        // user_id: req.body.user_id
+        user_id: req.session.user_id
     })
         .then(dbPostData => res.json(dbPostData))
         .catch(err => {
@@ -98,7 +102,7 @@ router.post('/', (req, res) => {
 //Make sure this PUT route is defined before the /:id PUT route, though.
 //Otherwise, Express.js will think the word "upvote" is a valid parameter for /:id.
 // PUT /api/posts/upvote
-router.put('/upvote', (req, res) => {
+router.put('/upvote', withAuth, (req, res) => {
     // custom static method created in models/Post.js
     if (req.session) {
         Post.upvote({ ...req.body, user_id: req.session.user_id }, { Vote, Comment, User })
@@ -111,7 +115,7 @@ router.put('/upvote', (req, res) => {
 });
 
 //Update a post
-router.put('/:id', (req, res) => {
+router.put('/:id', withAuth, (req, res) => {
     Post.update(
         {
             title: req.body.title
@@ -137,7 +141,7 @@ router.put('/:id', (req, res) => {
 
 
 //Delete a post
-router.delete('/:id', (req, res) => {
+router.delete('/:id', withAuth, (req, res) => {
     Post.destroy({
         where: {
             id: req.params.id

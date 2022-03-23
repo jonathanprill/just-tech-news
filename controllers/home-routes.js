@@ -50,9 +50,10 @@ router.get('/', (req, res) => {
 });
 
 
-//login
+//login 
 router.get('/login', (req, res) => {
     if (req.session.loggedIn) {
+        // redirect users away from the login page
         res.redirect('/');
         return;
     }
@@ -110,3 +111,23 @@ router.get('/post/:id', (req, res) => {
 });
 
 module.exports = router;
+
+
+// NOTES
+// Example middleware:
+// app.get('/',
+//     (req, res, next) => {
+//         console.log('first middleware');
+//         next();
+//     },
+//     (req, res, next) => {
+//         console.log('second middleware');
+//         next();
+//     },
+//     (req, res) => {
+//         console.log('final function call');
+//         res.send('ok');
+//     }
+// );
+// Calling next() in one of these functions calls the next middleware function,
+// passing along the same req and res values.
